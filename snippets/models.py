@@ -7,8 +7,8 @@ LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LAXERS])
 STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
-class Model(models.Model):
-    title = models.CharField(max_length=50)
+class Snippet(models.Model):
+    title = models.CharField(max_length=50, blank=True, default="")
     code = models.TextField()
     linenos = models.BooleanField(default=False)
     language = models.CharField(
