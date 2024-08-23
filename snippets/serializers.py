@@ -4,21 +4,32 @@ from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User
 
 
-class SnippetSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(
-        source="owner.username"
-    )  # read only so unwriteable explicitly and is hidden
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source="owner.username")
+    highlight = serializers.HyperlinkedIdentityField(
+        view_name="snippet-highlight", format="html"
+    )
 
     class Meta:
         model = Snippet
-        fields = ["id", "title", "code", "linenos", "language", "style", "owner"]
+        fields = [
+            "url",
+            "id",
+            "highlight",
+            "owner",
+            "title",
+            "code",
+            "linenos",
+            "language",
+            "style",
+        ]
 
 
-class UserSerializer(serializers.ModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Snippet.objects.all()
-    )  # define reverse relation with with uesr and snippet means user can access snippet indirectly
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    snippets = serializers.HyperlinkedRelatedField(
+        many=True, view_name="snippet-detail", read_only=True
+    )
 
     class Meta:
         model = User
-        fields = ["id", "username", "snippets"]  # fields to allow in serializer
+        fields = ["url", "id", "username", "snippets"]
