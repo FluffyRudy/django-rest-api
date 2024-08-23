@@ -12,10 +12,6 @@ from .serializers import UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
-def redirect_snippet_list(request):
-    return redirect("snippets")
-
-
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
