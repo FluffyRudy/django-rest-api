@@ -13,6 +13,9 @@ urlpatterns = [
         views.SnippetHighlight.as_view(),
         name="snippet-highlight",
     ),
+    path("snippet-urls", views.SnippetHyperlink.as_view(), name="snippet-urls"),
+    path("languages/", views.LanguageList.as_view(), name="languages"),
+    path("styles/", views.LanguageList.as_view(), name="styles"),
     path("accounts/profile/", views.UserProfileView.as_view(), name="user-profile"),
 ]
 
