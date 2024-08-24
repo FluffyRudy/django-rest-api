@@ -80,14 +80,19 @@ class LanguageList(APIView):
 
 class StyleChoices(APIView):
     def get(self, request, *args, **kwargs):
-        return Response({"styles": [item[0] for item in STYLE_CHOICES]})
+        styles = [item[0] for item in LANGUAGE_CHOICES]
+        paginator = PageNumberPagination()
+        paginated_style = paginator.paginate_queryset(styles, request)
+        return paginator.get_paginated_response(paginated_style)
 
 
 class SnippetHyperlink(APIView):
     def get(self, request, *args, **kwargs):
         snippets = Snippet.objects.all()
+        paginator = PageNumberPagination()
+        paginated_snippets = paginator.paginate_queryset(snippets, request)
         serializer = SnippetSerializer(
-            snippets, many=True, context={"request": request}
+            paginated_snippets, many=True, context={"request": request}
         )
         snippet_urls = [snippet["url"] for snippet in serializer.data]
-        return Response({"links": snippet_urls})
+        return paginator.get_paginated_response(snippet_urls)
